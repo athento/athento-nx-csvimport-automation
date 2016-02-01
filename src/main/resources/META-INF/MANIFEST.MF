@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: org.athento.nuxeo.csvimport
+Bundle-Version: 1.0.0
+Bundle-Name: CSV Import for automation
+Require-Bundle: org.nuxeo.runtime
+Bundle-ManifestVersion: 2
+Nuxeo-Component: OSGI-INF/automation-contrib.xml,
+ OSGI-INF/workermanager-contrib.xml
+Bundle-Vendor: Athento
+Created-By: Athento

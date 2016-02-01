@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<component name="org.athento.nuxeo.csvimport.WorkerContrib"
+	version="1.0">
+
+	<require>org.nuxeo.ecm.csv.workmanager</require>
+
+	<extension target="org.nuxeo.ecm.core.work.service" point="queues">
+		<queue id="csvImporter">
+			<maxThreads>4</maxThreads>
+		</queue>
+	</extension>
+
+</component>

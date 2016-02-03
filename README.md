@@ -6,7 +6,6 @@ This Nuxeo plugin implements an operation of automation endpoint REST to launch 
 
 ## Motivation
 
-There are a lot of common validations across any web application that could be centralized in one plugin to contribute to Nuxeo platform.
 The CSV import/export plugin of Nuxeo is used into UI by Seam component. We need an operation into automation endpoint to launch import CSV.
 
 ## Installation

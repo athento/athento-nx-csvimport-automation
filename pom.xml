@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.athento.nuxeo.csvimport</groupId>
 	<artifactId>athento-nx-csvimport-automation</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>Athento NX CSV Automation</name>
 	<description>Athento CSV Import Operation for Automation</description>
 	<developers>
@@ -22,7 +22,7 @@
 				<artifactId>nuxeo-distribution</artifactId>
 				<scope>import</scope>
 				<type>pom</type>
-				<version>6.0</version>
+				<version>7.10</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -89,11 +89,6 @@
 		<dependency>
 			<groupId>org.nuxeo.ecm.platform</groupId>
 			<artifactId>nuxeo-platform-filemanager-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.nuxeo.ecm.platform</groupId>
-			<artifactId>nuxeo-platform-mimetype-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -168,6 +163,48 @@
 		</repository>
 	</repositories>
 
+	<pluginRepositories>
+
+		<pluginRepository>
+			<id>public</id>
+			<url>http://maven.nuxeo.org/nexus/content/groups/public</url>
+			<name>Nuxeo releases</name>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>athento-public</id>
+			<name>Athento Releases</name>
+			<url>http://maven2.yerbabuena.es/artifactory/athento-public</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+
+		<pluginRepository>
+			<id>athento-public-snapshots</id>
+			<name>Athento Artifact Snapshots</name>
+			<url>http://maven2.yerbabuena.es/artifactory/athento-public-snapshot</url>
+			<layout>default</layout>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+		</pluginRepository>
+
+	</pluginRepositories>
+
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -201,24 +238,102 @@
 						<doUpdate>false</doUpdate>
 					</configuration>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3.1</version>
-					<configuration>
-						<archive>
-							<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-							<manifestEntries>
-								<Bundle-Version>${project.version}-t${buildNumber}</Bundle-Version>
-								<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
-							</manifestEntries>
-						</archive>
-					</configuration>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>test</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<timestamp>${maven.build.timestamp}</timestamp>
+				<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+			</properties>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<version>2.3.1</version>
+							<configuration>
+								<finalName>${project.artifactId}-${project.version}-${maven.build.timestamp}</finalName>
+								<archive>
+									<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+									<manifestEntries>
+										<Bundle-Version>${project.version}-t${buildNumber}</Bundle-Version>
+										<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+									</manifestEntries>
+								</archive>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+		<profile>
+			<id>pro</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>pro</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.athento.nuxeo.plugin</groupId>
+						<artifactId>athento-nx-single-addon</artifactId>
+						<version>1.0</version>
+						<configuration>
+							<name>${project.artifactId}</name>
+							<version>${project.version}</version>
+							<properties>
+								<url>http://www.athento.com</url>
+								<title>${project.name}</title>
+								<description>${project.description}</description>
+								<platform>cap-7.10</platform>
+							</properties>
+							<outputDir>addon</outputDir>
+						</configuration>
+						<executions>
+							<execution>
+								<id>addon-generation</id>
+								<phase>package</phase>
+								<goals>
+									<goal>generate</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-jar-plugin</artifactId>
+							<version>2.3.1</version>
+							<configuration>
+								<archive>
+									<manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
+									<manifestEntries>
+										<Bundle-Version>${project.version}-t${buildNumber}</Bundle-Version>
+										<Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+									</manifestEntries>
+								</archive>
+							</configuration>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+
+		</profile>
+	</profiles>
+
 	<properties>
-		<nuxeo.platform.version>6.0</nuxeo.platform.version>
+		<nuxeo.platform.version>7.10</nuxeo.platform.version>
 	</properties>
 </project>

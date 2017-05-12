@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.athento.nuxeo.csvimport</groupId>
 	<artifactId>athento-nx-csvimport-automation</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<name>Athento NX CSV Automation</name>
 	<description>Athento CSV Import Operation for Automation</description>
 	<developers>

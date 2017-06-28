@@ -11,8 +11,8 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.work.api.WorkManager;
 import org.nuxeo.ecm.core.work.api.WorkManager.Scheduling;
-import org.nuxeo.ecm.csv.CSVImporterOptions;
-import org.nuxeo.ecm.csv.CSVImporterWork;
+import org.nuxeo.ecm.csv.core.CSVImporterOptions;
+import org.nuxeo.ecm.csv.core.CSVImporterWork;
 import org.nuxeo.runtime.api.Framework;
 
 /**

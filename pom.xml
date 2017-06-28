@@ -15,6 +15,21 @@
 			<organizationUrl>http://www.athento.com</organizationUrl>
 		</developer>
 	</developers>
+    <distributionManagement>
+        <repository>
+            <id>athento-public</id>
+            <name>Athento Public</name>
+            <url>http://maven2.yerbabuena.es/artifactory/athento-public</url>
+            <layout>default</layout>
+        </repository>
+        <snapshotRepository>
+            <uniqueVersion>true</uniqueVersion>
+            <id>athento-public-snapshot</id>
+            <name>Athento Public Snapshot</name>
+            <url>http://maven2.yerbabuena.es/artifactory/athento-public-snapshot</url>
+            <layout>default</layout>
+        </snapshotRepository>
+    </distributionManagement>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -22,7 +37,7 @@
 				<artifactId>nuxeo-distribution</artifactId>
 				<scope>import</scope>
 				<type>pom</type>
-				<version>7.10</version>
+				<version>8.10</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -68,8 +83,8 @@
 			<artifactId>nuxeo-platform-filemanager-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.nuxeo.csv</groupId>
-			<artifactId>nuxeo-csv</artifactId>
+			<groupId>org.nuxeo.ecm.csv</groupId>
+			<artifactId>nuxeo-csv-core</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.nuxeo.ecm.automation</groupId>
@@ -295,7 +310,7 @@
 								<url>http://www.athento.com</url>
 								<title>${project.name}</title>
 								<description>${project.description}</description>
-								<platform>cap-7.10</platform>
+								<platform>cap-8.10</platform>
 							</properties>
 							<outputDir>addon</outputDir>
 						</configuration>
@@ -334,6 +349,6 @@
 	</profiles>
 
 	<properties>
-		<nuxeo.platform.version>7.10</nuxeo.platform.version>
+		<nuxeo.platform.version>8.10</nuxeo.platform.version>
 	</properties>
 </project>

@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.athento.nuxeo.csvimport</groupId>
 	<artifactId>athento-nx-csvimport-automation</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>0.1-SNAPSHOT</version>
 	<name>Athento NX CSV Automation</name>
 	<description>Athento CSV Import Operation for Automation</description>
 	<developers>
@@ -22,7 +22,7 @@
 				<artifactId>nuxeo-distribution</artifactId>
 				<scope>import</scope>
 				<type>pom</type>
-				<version>7.10</version>
+				<version>${nuxeo.platform.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -295,7 +295,7 @@
 								<url>http://www.athento.com</url>
 								<title>${project.name}</title>
 								<description>${project.description}</description>
-								<platform>cap-7.10</platform>
+								<platform>cap-6.0</platform>
 							</properties>
 							<outputDir>addon</outputDir>
 						</configuration>
@@ -334,6 +334,6 @@
 	</profiles>
 
 	<properties>
-		<nuxeo.platform.version>7.10</nuxeo.platform.version>
+		<nuxeo.platform.version>6.0-HF21</nuxeo.platform.version>
 	</properties>
 </project>

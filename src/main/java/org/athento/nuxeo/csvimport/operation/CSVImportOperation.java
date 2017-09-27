@@ -2,6 +2,7 @@ package org.athento.nuxeo.csvimport.operation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -11,9 +12,11 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.work.api.WorkManager;
 import org.nuxeo.ecm.core.work.api.WorkManager.Scheduling;
-import org.nuxeo.ecm.csv.CSVImporterOptions;
-import org.nuxeo.ecm.csv.CSVImporterWork;
+import org.nuxeo.ecm.csv.core.CSVImporterOptions;
+import org.nuxeo.ecm.csv.core.CSVImporterWork;
 import org.nuxeo.runtime.api.Framework;
+
+import java.io.File;
 
 /**
  * Import CSV operation.
@@ -35,16 +38,20 @@ public class CSVImportOperation {
 	protected CoreSession session;
 
 	/** Destiny path. */
-	@Param(name = "destinyPath", required = true)
-	private String destinyPath;
+	@Param(name = "destinyPath")
+	protected String destinyPath;
 
 	/** Schedule mode. */
 	@Param(name = "scheduleMode", required = false)
-	private String scheduleMode;
+    protected String scheduleMode;
 
 	/** Notify by email. */
 	@Param(name = "email", required = false)
-	private boolean email = true;
+    protected boolean email = true;
+
+	/** Copy file. */
+	@Param(name = "copyFile", required = false)
+    protected boolean copyFile = true;
 
 	/**
 	 * Run method of Import a CSV file application operation.
@@ -56,13 +63,27 @@ public class CSVImportOperation {
 	public void run(Blob blob) throws Exception {
 		// Make a file blob
 		FileBlob blobFile = new FileBlob(blob.getStream());
+		if (copyFile) {
+		    String path = Framework.getProperty("csv.import.copyfile.path", null);
+		    if (path != null) {
+		        File copiedDir = new File(path);
+		        if (!copiedDir.exists()) {
+                    copiedDir.mkdirs();
+                }
+                File copiedFile = new File(copiedDir.getAbsoluteFile() + "/" + blob.getFilename());
+                FileUtils.copy(blobFile.getFile(), copiedFile);
+                if (LOG.isInfoEnabled()) {
+                    LOG.info("CSV to " + copiedDir.getAbsolutePath() + " copied.");
+                }
+            }
+		}
 		// Options for notification
 		CSVImporterOptions options = new CSVImporterOptions.Builder()
 				.sendEmail(email).build();
 		// Make the importer instance
 		CSVImporterWork work = new CSVImporterWork(session.getRepositoryName(),
 				destinyPath, session.getPrincipal().getName(),
-				blobFile.getFile(), blob.getFilename(), options);
+				blobFile, options);
 		WorkManager workManager = Framework.getLocalService(WorkManager.class);
 		// Get scheduling mode
 		WorkManager.Scheduling scheduling = getSchedulingMode(scheduleMode);

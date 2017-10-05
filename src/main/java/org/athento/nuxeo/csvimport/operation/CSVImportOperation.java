@@ -2,6 +2,7 @@ package org.athento.nuxeo.csvimport.operation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.athento.nuxeo.csvimport.CSVUtils;
 import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -16,7 +17,7 @@ import org.nuxeo.ecm.csv.core.CSVImporterOptions;
 import org.nuxeo.ecm.csv.core.CSVImporterWork;
 import org.nuxeo.runtime.api.Framework;
 
-import java.io.File;
+import java.io.*;
 
 /**
  * Import CSV operation.
@@ -53,6 +54,10 @@ public class CSVImportOperation {
 	@Param(name = "copyFile", required = false)
     protected boolean copyFile = true;
 
+	/** Separator. */
+	@Param(name = "separator", required = false)
+	protected String separator = ",";
+
 	/**
 	 * Run method of Import a CSV file application operation.
 	 * 
@@ -70,8 +75,9 @@ public class CSVImportOperation {
 		        if (!copiedDir.exists()) {
                     copiedDir.mkdirs();
                 }
+                File csvCopiedFile = CSVUtils.generateCSVWithColumns(blobFile.getFile(), separator, destinyPath, email);
                 File copiedFile = new File(copiedDir.getAbsoluteFile() + "/" + blob.getFilename());
-                FileUtils.copy(blobFile.getFile(), copiedFile);
+                FileUtils.copy(csvCopiedFile, copiedFile);
                 if (LOG.isInfoEnabled()) {
                     LOG.info("CSV to " + copiedDir.getAbsolutePath() + " copied.");
                 }
@@ -92,6 +98,7 @@ public class CSVImportOperation {
 		// Schedule work
 		workManager.schedule(work, scheduling);
 	}
+
 
 	/**
 	 * Get scheduling mode. Default Enqueue.

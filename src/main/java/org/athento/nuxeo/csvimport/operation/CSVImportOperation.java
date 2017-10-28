@@ -95,7 +95,7 @@ public class CSVImportOperation {
 		WorkManager workManager = Framework.getLocalService(WorkManager.class);
 		// Get scheduling mode
 		WorkManager.Scheduling scheduling = getSchedulingMode(scheduleMode);
-		LOG.info("Starting CSV importing of " + blob.getFilename() + " to "
+		LOG.info("Starting CSV importing of " + tmpFile.getName() + " to "
 				+ destinyPath + " with mode " + scheduling.name());
 		// Schedule work
 		workManager.schedule(work, scheduling);

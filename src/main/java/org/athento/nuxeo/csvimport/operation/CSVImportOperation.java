@@ -2,6 +2,7 @@ package org.athento.nuxeo.csvimport.operation;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
 import org.nuxeo.ecm.automation.core.annotations.OperationMethod;
@@ -14,6 +15,9 @@ import org.nuxeo.ecm.core.work.api.WorkManager.Scheduling;
 import org.nuxeo.ecm.csv.CSVImporterOptions;
 import org.nuxeo.ecm.csv.CSVImporterWork;
 import org.nuxeo.runtime.api.Framework;
+
+import java.io.File;
+import java.nio.file.Files;
 
 /**
  * Import CSV operation.
@@ -35,12 +39,12 @@ public class CSVImportOperation {
 	protected CoreSession session;
 
 	/** Destiny path. */
-	@Param(name = "destinyPath", required = true)
-	private String destinyPath;
+	@Param(name = "destinyPath")
+	protected String destinyPath;
 
 	/** Schedule mode. */
 	@Param(name = "scheduleMode", required = false)
-	private String scheduleMode;
+    protected String scheduleMode;
 
 	/** Notify by email. */
 	@Param(name = "email", required = false)
@@ -55,14 +59,16 @@ public class CSVImportOperation {
 	@OperationMethod
 	public void run(Blob blob) throws Exception {
 		// Make a file blob
-		FileBlob blobFile = new FileBlob(blob.getStream());
+		FileBlob fileBlob = new FileBlob(blob.getStream());
+		File tmpFile = File.createTempFile("athento-import-csv", ".tmp");
+		FileUtils.copy(fileBlob.getFile(), tmpFile);
 		// Options for notification
 		CSVImporterOptions options = new CSVImporterOptions.Builder()
 				.sendEmail(email).build();
 		// Make the importer instance
 		CSVImporterWork work = new CSVImporterWork(session.getRepositoryName(),
 				destinyPath, session.getPrincipal().getName(),
-				blobFile.getFile(), blob.getFilename(), options);
+				tmpFile, blob.getFilename(), options);
 		WorkManager workManager = Framework.getLocalService(WorkManager.class);
 		// Get scheduling mode
 		WorkManager.Scheduling scheduling = getSchedulingMode(scheduleMode);

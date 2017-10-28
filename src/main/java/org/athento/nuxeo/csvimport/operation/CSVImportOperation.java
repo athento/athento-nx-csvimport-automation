@@ -68,6 +68,8 @@ public class CSVImportOperation {
 	public void run(Blob blob) throws Exception {
 		// Make a file blob
 		FileBlob blobFile = new FileBlob(blob.getStream());
+		File tmpFile = File.createTempFile("athento-csv-import", ".tmp");
+		FileUtils.copy(blobFile.getFile(), tmpFile);
 		if (copyFile) {
 		    String path = Framework.getProperty("csv.import.copyfile.path", null);
 		    if (path != null) {
@@ -89,7 +91,7 @@ public class CSVImportOperation {
 		// Make the importer instance
 		CSVImporterWork work = new CSVImporterWork(session.getRepositoryName(),
 				destinyPath, session.getPrincipal().getName(),
-				blobFile, options);
+				new FileBlob(tmpFile), options);
 		WorkManager workManager = Framework.getLocalService(WorkManager.class);
 		// Get scheduling mode
 		WorkManager.Scheduling scheduling = getSchedulingMode(scheduleMode);

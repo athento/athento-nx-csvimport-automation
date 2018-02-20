@@ -274,6 +274,6 @@
         </plugins>
     </build>
 	<properties>
-		<nuxeo.platform.version>8.10</nuxeo.platform.version>
+		<nuxeo.platform.version>7.10</nuxeo.platform.version>
 	</properties>
 </project>

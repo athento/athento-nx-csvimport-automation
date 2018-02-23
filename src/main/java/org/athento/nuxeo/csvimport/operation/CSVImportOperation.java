@@ -3,6 +3,8 @@ package org.athento.nuxeo.csvimport.operation;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.athento.nuxeo.csvimport.CSVUtils;
+import org.athento.nuxeo.ecm.csv.CSVImporterOptions;
+import org.athento.nuxeo.ecm.csv.CSVImporterWork;
 import org.nuxeo.common.utils.FileUtils;
 import org.nuxeo.ecm.automation.core.annotations.Context;
 import org.nuxeo.ecm.automation.core.annotations.Operation;
@@ -13,10 +15,7 @@ import org.nuxeo.ecm.core.api.CoreSession;
 import org.nuxeo.ecm.core.api.impl.blob.FileBlob;
 import org.nuxeo.ecm.core.work.api.WorkManager;
 import org.nuxeo.ecm.core.work.api.WorkManager.Scheduling;
-import org.nuxeo.ecm.csv.core.CSVImporterOptions;
-import org.nuxeo.ecm.csv.core.CSVImporterWork;
 import org.nuxeo.runtime.api.Framework;
-
 import java.io.*;
 
 /**
@@ -91,7 +90,7 @@ public class CSVImportOperation {
 		// Make the importer instance
 		CSVImporterWork work = new CSVImporterWork(session.getRepositoryName(),
 				destinyPath, session.getPrincipal().getName(),
-				new FileBlob(tmpFile), options);
+				tmpFile, tmpFile.getName(), options);
 		WorkManager workManager = Framework.getLocalService(WorkManager.class);
 		// Get scheduling mode
 		WorkManager.Scheduling scheduling = getSchedulingMode(scheduleMode);
